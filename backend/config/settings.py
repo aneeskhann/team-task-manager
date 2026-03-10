@@ -131,7 +131,9 @@ STATIC_URL = "static/"
 # Django REST Framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.SessionAuthentication",
+        # CsrfExemptSessionAuthentication skips Django's built-in CSRF check.
+        # Cross-origin security is handled by CORS_ALLOWED_ORIGINS instead.
+        "config.auth.CsrfExemptSessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
@@ -140,10 +142,15 @@ REST_FRAMEWORK = {
 }
 
 
-# CORS (dev-friendly defaults)
-CORS_ALLOW_ALL_ORIGINS = os.environ.get("CORS_ALLOW_ALL_ORIGINS", "1") == "1"
+# CORS
+# NOTE: CORS_ALLOW_ALL_ORIGINS cannot be used together with CORS_ALLOW_CREDENTIALS=True
+# because browsers block wildcard (*) Access-Control-Allow-Origin when credentials are sent.
+# Use an explicit allowlist so the server echoes back the exact requesting origin.
 CORS_ALLOWED_ORIGINS = [
-    o for o in os.environ.get("CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",") if o
+    o for o in os.environ.get(
+        "CORS_ALLOWED_ORIGINS",
+        "http://localhost:3000,http://localhost:5173"
+    ).split(",") if o
 ]
 CORS_ALLOW_CREDENTIALS = True
 

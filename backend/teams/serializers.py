@@ -40,3 +40,9 @@ class AddMemberSerializer(serializers.Serializer):
         if not User.objects.filter(id=value).exists():
             raise serializers.ValidationError("User not found.")
         return value
+
+
+class InviteSerializer(serializers.Serializer):
+    """Validates the payload for the invite-by-email stub action."""
+
+    email = serializers.EmailField()

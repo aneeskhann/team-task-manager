@@ -26,7 +26,15 @@ class Task(models.Model):
         choices=Status.choices,
         default=Status.PENDING,
     )
+    due_date = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Optional deadline for this task (YYYY-MM-DD).",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["due_date", "-created_at"]
 
     def __str__(self) -> str:
         return self.title

@@ -1,8 +1,9 @@
 from django.urls import re_path
 
-from .views import LoginView, LogoutView, MeView, RegisterView
+from .views import CsrfView, LoginView, LogoutView, MeView, RegisterView
 
 urlpatterns = [
+    re_path(r"^auth/csrf/?$", CsrfView.as_view(), name="auth-csrf"),
     re_path(r"^auth/register/?$", RegisterView.as_view(), name="auth-register"),
     re_path(r"^auth/login/?$", LoginView.as_view(), name="auth-login"),
     re_path(r"^auth/logout/?$", LogoutView.as_view(), name="auth-logout"),
